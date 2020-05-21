@@ -1,0 +1,15 @@
+{
+  "name": "sna_node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "sna.js",
+  "scripts": {
+    "start": "node sna.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "graph-data-structure": "^1.12.0",
+    "xlsx": "^0.16.0"
+  }
+}
