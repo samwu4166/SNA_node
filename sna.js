@@ -32,9 +32,9 @@ if (DEBUG==true){
         test_graph[edge['to']][edge['from']]=1;
         direct_test_graph[edge['from']][edge['to']]=1;
     })
-    
+    console.log('Start conpute : \n');
     //test
-    //console.log(degree(direct_test_graph));
+    console.log(degree(direct_test_graph));
     const result_distance = floyd_warshall(test_graph,7,MaxDistance);
     console.log(checkCloseness(result_distance));
 
@@ -100,7 +100,7 @@ function degree(direct_graph){
                 outter = outter + direct_graph[i][j];;
             }
         }
-        result[i]['outter'] = outter/(direct_graph.length-1) ;
+        result[i]['outter'] = Number((outter/(direct_graph.length-1)).toFixed(2)) ;
     }
     for(var i=0; i <direct_graph.length;i++){
         var inner = 0;
@@ -109,7 +109,7 @@ function degree(direct_graph){
                 inner = inner+element[i];
             }
         });
-        result[i]['innter'] = inner/(direct_graph.length-1) ;
+        result[i]['innter'] = Number((inner/(direct_graph.length-1)).toFixed(2)) ;
     }
 
     return result;
@@ -122,7 +122,7 @@ function checkCloseness(distanceMap){
         for(var j=0;j<distanceMap.length;j++){
             sum_of_link+=distanceMap[i][j];
         }
-        result[i]=1/sum_of_link;
+        result[i] = Number((1/sum_of_link).toFixed(3)) ;
     }
     return result;
 }
