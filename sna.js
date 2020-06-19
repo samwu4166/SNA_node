@@ -1,5 +1,5 @@
 const MaxDistance = 1000; // define maxDistance for calculate shortest path algorithm
-const DEBUG = true;
+const DEBUG = false;
 if (DEBUG==true){
     // test graph for testing function: innter degree, outter degree, checkness
     var test_edges = [
@@ -12,17 +12,17 @@ if (DEBUG==true){
         {'from':6,'to':4} //GE
     ]
     var direct_test_graph = new Array(7); // direct_graph
-    var test_graph = new Array(7); // full_connect_graph
-    for (var i = 0; i < test_graph.length; i++) { 
-        test_graph[i] = new Array(7);
+    var fully_connect_test_graph = new Array(7); // fully_connect_graph
+    for (var i = 0; i < fully_connect_test_graph.length; i++) { 
+        fully_connect_test_graph[i] = new Array(7);
         direct_test_graph[i] = new Array(7);
     }
-    for (var i = 0; i < test_graph.length; i++) { 
-        for (var j = 0; j < test_graph.length; j++) { 
-            test_graph[i][j] = MaxDistance;
+    for (var i = 0; i < fully_connect_test_graph.length; i++) { 
+        for (var j = 0; j < fully_connect_test_graph.length; j++) { 
+            fully_connect_test_graph[i][j] = MaxDistance;
             direct_test_graph[i][j] = MaxDistance;
             if (i==j){
-                test_graph[i][j] = 0;
+                fully_connect_test_graph[i][j] = 0;
                 direct_test_graph[i][j] = 0;
             } 
         } 
@@ -31,15 +31,15 @@ if (DEBUG==true){
         /*
         add edges into array from test data
         */
-        test_graph[edge['from']][edge['to']]=1;
-        test_graph[edge['to']][edge['from']]=1;
+        fully_connect_test_graph[edge['from']][edge['to']]=1;
+        fully_connect_test_graph[edge['to']][edge['from']]=1;
         direct_test_graph[edge['from']][edge['to']]=1;
     })
     console.log('Start conpute : \n');
     //test function
     console.log(degree(direct_test_graph));
-    const result_distance = floyd_warshall(test_graph,7,MaxDistance); // result_distance means all-pairs shortest path
-    console.log(checkCloseness(result_distance));
+    const all_pairs_distance = floyd_warshall(fully_connect_test_graph,7,MaxDistance); // result_distance means all-pairs shortest path
+    console.log(checkCloseness(all_pairs_distance));
 
 }
 //OK
@@ -128,16 +128,16 @@ function degree(direct_graph){
     return result;
 }
 //OK
-function checkCloseness(distanceMap){
+function checkCloseness(all_pairs_distance){
     /*
     Calculate for checkness
     Map must be all-pairs shortest graph
     */
     var result = {};
-    for(var i=0;i<distanceMap.length;i++){
+    for(var i=0;i<all_pairs_distance.length;i++){
         let sum_of_link = 0;
-        for(var j=0;j<distanceMap.length;j++){
-            sum_of_link+=distanceMap[i][j];
+        for(var j=0;j<all_pairs_distance.length;j++){
+            sum_of_link+=all_pairs_distance[i][j];
         }
         result[i] = Number((1/sum_of_link).toFixed(3)) ;
     }
@@ -184,28 +184,30 @@ if (DEBUG == false){
     const unique_array = [...name_set];
     const datalen = unique_array.length
     
-    var graph = new Array(datalen); 
-    var fgraph = new Array(datalen); 
+    var direct_graph = new Array(datalen); 
+    var fully_connect_graph = new Array(datalen); 
     // Loop to create 2D array using 1D array 
-    for (var i = 0; i < graph.length; i++) { 
-        graph[i] = new Array(datalen);
-        fgraph[i] = new Array(datalen); 
+    for (var i = 0; i < direct_graph.length; i++) { 
+        direct_graph[i] = new Array(datalen);
+        fully_connect_graph[i] = new Array(datalen); 
     }
     // initialize
     for (var i = 0; i < datalen; i++) { 
         for (var j = 0; j < datalen; j++) { 
-            graph[i][j] = MaxDistance;
-            fgraph[i][j] = MaxDistance;
+            direct_graph[i][j] = MaxDistance;
+            fully_connect_graph[i][j] = MaxDistance;
             if (i==j){
-                graph[i][j] = 0;
-                fgraph[i][j] = 0;
+                direct_graph[i][j] = 0;
+                fully_connect_graph[i][j] = 0;
             } 
         } 
     } 
     //add edges into graph array
     data.forEach(edge=>{
-        graph[unique_array.indexOf(edge['上游業者名稱'])][unique_array.indexOf(edge['下游業者名稱'])]=1
-        fgraph[unique_array.indexOf(edge['上游業者名稱'])][unique_array.indexOf(edge['下游業者名稱'])]=1
-        fgraph[unique_array.indexOf(edge['下游業者名稱'])][unique_array.indexOf(edge['上游業者名稱'])]=1
+        direct_graph[unique_array.indexOf(edge['上游業者名稱'])][unique_array.indexOf(edge['下游業者名稱'])]=1
+        fully_connect_graph[unique_array.indexOf(edge['上游業者名稱'])][unique_array.indexOf(edge['下游業者名稱'])]=1
+        fully_connect_graph[unique_array.indexOf(edge['下游業者名稱'])][unique_array.indexOf(edge['上游業者名稱'])]=1
     })
+    console.log(degree(direct_graph));
+    console.log(checkCloseness(floyd_warshall(fully_connect_graph,datalen,MaxDistance)));
 }
