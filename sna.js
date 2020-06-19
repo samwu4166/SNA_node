@@ -109,7 +109,7 @@ function degree(direct_graph){
     for(var i=0; i <direct_graph.length;i++){
         var outter = 0;
         for(var j=0;j <direct_graph[i].length;j++){
-            if(direct_graph[i][j]!==1000){
+            if(direct_graph[i][j]!==MaxDistance){
                 outter = outter + direct_graph[i][j];;
             }
         }
@@ -118,7 +118,7 @@ function degree(direct_graph){
     for(var i=0; i <direct_graph.length;i++){
         var inner = 0;
         direct_graph.forEach(element=>{
-            if (element[i]!==1000){
+            if (element[i]!==MaxDistance){
                 inner = inner+element[i];
             }
         });
