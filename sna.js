@@ -1,7 +1,7 @@
-const MaxDistance = 1000;
+const MaxDistance = 1000; // define maxDistance for calculate shortest path algorithm
 const DEBUG = true;
 if (DEBUG==true){
-    // test graph from ppt
+    // test graph for testing function: innter degree, outter degree, checkness
     var test_edges = [
         {'from':0,'to':1}, //AB
         {'from':0,'to':2}, //AC
@@ -11,8 +11,8 @@ if (DEBUG==true){
         {'from':5,'to':4}, //FE
         {'from':6,'to':4} //GE
     ]
-    var direct_test_graph = new Array(7);
-    var test_graph = new Array(7);
+    var direct_test_graph = new Array(7); // direct_graph
+    var test_graph = new Array(7); // full_connect_graph
     for (var i = 0; i < test_graph.length; i++) { 
         test_graph[i] = new Array(7);
         direct_test_graph[i] = new Array(7);
@@ -28,19 +28,25 @@ if (DEBUG==true){
         } 
     }
     test_edges.forEach(edge=>{
+        /*
+        add edges into array from test data
+        */
         test_graph[edge['from']][edge['to']]=1;
         test_graph[edge['to']][edge['from']]=1;
         direct_test_graph[edge['from']][edge['to']]=1;
     })
     console.log('Start conpute : \n');
-    //test
+    //test function
     console.log(degree(direct_test_graph));
-    const result_distance = floyd_warshall(test_graph,7,MaxDistance);
+    const result_distance = floyd_warshall(test_graph,7,MaxDistance); // result_distance means all-pairs shortest path
     console.log(checkCloseness(result_distance));
 
 }
 //OK
 function floyd_warshall(graph,vertex_num,MaxDistance){
+    /*
+    Calculate for all-pairs shortest path
+    */
     var Distance = new Array(vertex_num); 
     var Predecessor = new Array(vertex_num); 
     // initialize distance and predecessor 
@@ -73,17 +79,11 @@ function floyd_warshall(graph,vertex_num,MaxDistance){
     }
     return Distance;
 }
-// print shortest path
-// function path(i, j)
-//     if i = j then
-//         write(i)
-//     else if next[i, j] = NIL then
-//         write("no path exists")
-//     else
-//         path(i, next[i, j])
-//         write(j)
 //OK
 function resize(arr,defaultValue = 0){
+    /*
+    Custom function for resize array
+    */
     for(var i=0;i<arr.length;i++){
         arr[i] = defaultValue;
     }
@@ -91,6 +91,19 @@ function resize(arr,defaultValue = 0){
 }
 //OK
 function degree(direct_graph){
+    /*
+    Calculate for inner degree, outter degree
+    graph must be direct_graph
+    Data:
+        A->B
+        A->C
+        B->C
+    Array:
+          A B C
+        A 0 1 1
+        B 0 0 1
+        C 0 0 0
+    */
     var result = {};
     for(var i=0; i <direct_graph.length;i++){result[i]={};}
     for(var i=0; i <direct_graph.length;i++){
@@ -116,6 +129,10 @@ function degree(direct_graph){
 }
 //OK
 function checkCloseness(distanceMap){
+    /*
+    Calculate for checkness
+    Map must be all-pairs shortest graph
+    */
     var result = {};
     for(var i=0;i<distanceMap.length;i++){
         let sum_of_link = 0;
@@ -128,8 +145,8 @@ function checkCloseness(distanceMap){
 }
 
 if (DEBUG == false){
-    const XLSX = require('xlsx');
-    const workbook = XLSX.readFile('data.csv');
+    const XLSX = require('xlsx'); // import xlsx package
+    const workbook = XLSX.readFile('data.csv'); // read file
     const MaxDistance = 1000;
     const sheetNames = workbook.SheetNames;
     const worksheet = workbook.Sheets[sheetNames[0]];
@@ -159,7 +176,7 @@ if (DEBUG == false){
     data[row][headers[col]] = value;
     });
     //console.log(data);
-    const name_set = new Set();
+    const name_set = new Set();// prepare unique client list for graph
     data.forEach(element => {
         name_set.add(element['下游業者名稱'])
         name_set.add(element['上游業者名稱'])
@@ -185,7 +202,7 @@ if (DEBUG == false){
             } 
         } 
     } 
-    
+    //add edges into graph array
     data.forEach(edge=>{
         graph[unique_array.indexOf(edge['上游業者名稱'])][unique_array.indexOf(edge['下游業者名稱'])]=1
         fgraph[unique_array.indexOf(edge['上游業者名稱'])][unique_array.indexOf(edge['下游業者名稱'])]=1
